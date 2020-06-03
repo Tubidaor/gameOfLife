@@ -7,143 +7,266 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      gridStart: [],
+      gridInitialState: [],
+      gridRun: [],
       running: false,
     }
   }
   
+
+  pupulateArray = (numCol, numRow) => {
+    let array = []
+    let styleAlive = {
+      backgroundColor: "blue"
+    }
+    let styleDead = {
+      backgroundColor: "white"
+    }
+    for(let i = 0; i < numCol; i++) {
+      let fill =[]
+      for(let j = 0; j < numRow; j++) {
+        fill.push({
+          id:`${i}${j}`,
+          state: 0,
+          alive: () => {
+          return (
+            <div className={`node div${i}${j}`} style={styleAlive}/>
+          )},
+          dead: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleDead}/>
+            )},
+        })
+      }
+      array.push(fill)
+      this.setState({
+        gridStart: array,
+      })
+  }
+  }
+
   handleClick = () => {
+    
     this.setState({
       running: !this.state.running,
     })
+    this.pupulateArray(50, 50)
   }
 
 
+  randomStart = () => {
+    let { gridStart } = this.state
+    let gridInitialState = []
+    let styleAlive = {
+      backgroundColor: "blue"
+    }
+    let styleDead = {
+      backgroundColor: "white"
+    }
 
+    for(let i = 0; i < gridStart.length; i++) {
+      let preGrid = []
+  
+      for(let j = 0; j < gridStart[i].length; j++) {
+        let coin = Math.floor(Math.random() * 2);
+        if(coin === 0) {
+          preGrid.push(
+            {
+              id:`${i}${j}`,
+              state: 0,
+              alive: () => {
+              return (
+                <div className={`node div${i}${j}`} style={styleAlive}/>
+              )},
+              dead: () => {
+                return (
+                  <div className={`node div${i}${j}`} style={styleDead}/>
+                )},
+            }
+        )
+        }
+        if(coin === 1) {
+          preGrid.push(
+          {
+            id:`${i}${j}`,
+            state: 1,
+            alive: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleAlive}/>
+            )},
+            dead: () => {
+              return (
+                <div className={`node div${i}${j}`} style={styleDead}/>
+              )},
+          })
+        }
+        
+      }
+      gridInitialState.push(preGrid)
+    }
+    this.setState({
+      gridInitialState
+    })
 
-
-
+  }
 //16377
+  playLife = () => {
+  
+  let cell = this.state.gridInitialState
+  let emptyGrid = []
 
-  render() {
+  function sum(row,col) {
+    let nTopL = cell[row-1] === undefined|| cell[row-1][col-1] === undefined? 0: cell[row-1][col-1].state;
+    let nTop = cell[row-1] === undefined || cell[row-1][col] === undefined? 0: cell[row-1][col].state;
+    let nTopR = cell[row-1] === undefined || cell[row-1][col+1] === undefined? 0: cell[row-1][col+1].state;
+    let nLeft = cell[row] === undefined || cell[row][col-1] === undefined? 0: cell[row][col-1].state;
+    let nRight = cell[row] === undefined || cell[row][col+1] === undefined? 0: cell[row][col+1].state;
+    let nBotL = cell[row+1] === undefined || cell[row+1][col-1] === undefined? 0: cell[row+1][col-1].state;
+    let nBot = cell[row+1] === undefined || cell[row+1][col] === undefined? 0: cell[row+1][col].state;
+    let nBotR = cell[row+1] === undefined || cell[row+1][col+1] === undefined? 0: cell[row+1][col+1].state;
+    const neighbors = [nTopL, nTop, nTopR, nLeft, nRight, nBotL, nBot, nBotR]
+    let sum = 0
     
-    let array = []
+    neighbors.filter(neigh => {return neigh !== undefined})
 
-    function pupulateArray(numCol, numRow) {
-      let styleAlive = {
-        backgroundColor: "blue"
-      }
-      let styleDead = {
-        backgroundColor: "white"
-      }
-      for(let i = 0; i < numCol; i++) {
-        let fill =[]
-        for(let j = 0; j < numRow; j++) {
-          fill.push({
+    for(let i = 0; i < neighbors.length; i++) {
+      sum = sum + neighbors[i]
+    }
+
+    return sum
+  }
+  let styleAlive = {
+    backgroundColor: "blue"
+  }
+  let styleDead = {
+    backgroundColor: "white"
+  }
+  for(let i = 0; i < cell.length; i++) {
+    let preGrid = []
+    for(let j = 0; j < cell[i].length; j++) {
+
+      if(sum(i,j) < 2) {
+        preGrid.push(
+          {
             id:`${i}${j}`,
             state: 0,
             alive: () => {
             return (
-              <div className={`div div${i}${j}`} style={styleAlive}/>
+              <div className={`node div${i}${j}`} style={styleAlive}/>
             )},
             dead: () => {
               return (
-                <div className={`div div${i}${j}`} style={styleDead}/>
+                <div className={`node div${i}${j}`} style={styleDead}/>
               )},
-          })
-        }
-        array.push(fill)
-        console.log(array)
-    }
-    }
-
-    function randomStart() {
-      for(let i = 0; i < array.length; i++) {
-    
-        for(let j = 0; j < array[i].length; j++) {
-          let coin = Math.floor(Math.random() * 2);
-          console.log(coin)
-          if(coin === 0) {
-            array[i][j].state = 0
           }
-          if(coin === 1) {
-            array[i][j].state = 1
-          }
+      )
+    }
+    if(sum(i,j) === 3 ) {
+      preGrid.push(
+        {
+          id:`${i}${j}`,
+          state: 1,
+          alive: () => {
+          return (
+            <div className={`node div${i}${j}`} style={styleAlive}/>
+          )},
+          dead: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleDead}/>
+            )},
         }
-      }
+    )
     }
-
-    function playLife() {
-
-    function sum(col,row) {
-      let cell = array
-      console.log(cell)
-      
-      let nTopL = cell[row-1][col-1].state || 0
-      let nTop = cell[row-1][col].state || 0
-      let nTopR = cell[row-1][col+1].state || 0
-      let nLeft = cell[row][col-1].state || 0
-      let nRight = cell[row][col+1].state || 0
-      let nBotL = cell[row+1][col-1].state || 0
-      let nBot = cell[row+1][col].state || 0
-      let nBotR = cell[row+1][col+1].state || 0
-      const neighbors = [nTopL, nTop, nTopR, nLeft, nRight, nBotL, nBot, nBotR]
-      let sum = 0
-      
-      neighbors.filter(neigh => {return neigh !== undefined})
-      console.log(neighbors)
-      for(let i = 0; i < neighbors.length; i++) {
-        sum = sum + neighbors[i]
-      }
-      return sum
+    if(sum(i,j) === 2 && cell[i][j].state === 1) {
+      preGrid.push(
+        {
+          id:`${i}${j}`,
+          state: 1,
+          alive: () => {
+          return (
+            <div className={`node div${i}${j}`} style={styleAlive}/>
+          )},
+          dead: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleDead}/>
+            )},
+        }
+    )
     }
-  
+    if(sum(i,j) > 3) {
+      preGrid.push(
+        {
+          id:`${i}${j}`,
+          state: 0,
+          alive: () => {
+          return (
+            <div className={`node div${i}${j}`} style={styleAlive}/>
+          )},
+          dead: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleDead}/>
+            )},
+        }
+    )
+    } 
+    if(sum(i,j) === 2 && cell[i][j].state === 0) {
+      preGrid.push(
+        {
+          id:`${i}${j}`,
+          state: 0,
+          alive: () => {
+          return (
+            <div className={`node div${i}${j}`} style={styleAlive}/>
+          )},
+          dead: () => {
+            return (
+              <div className={`node div${i}${j}`} style={styleDead}/>
+            )},
+        }
+    )
+    }
+  }
+  emptyGrid.push(preGrid)
+  this.setState({
+    gridInitialState: emptyGrid
+  })
+}
+
+this.grid(emptyGrid)
+}
+
+grid = (array) => {
+    let gridDiv = []
     for(let i = 0; i < array.length; i++) {
-  
-      for(let j = 0; j < array[i].length; j++) {
-        if(sum(j,i) < 2) {
-          array[i][j].state = 0
+      let cell = []
+      for(let j = 0; j < array[i].length; j++){
+        if(array[i][j].state === 1) {
+        cell.push(array[i][j].alive())
         }
-        if(array[i][j].state === 0 && sum(j,i) === 3) {
-          array[i][j].state = 1
-        }
-        if(sum(j,i) > 3) {
-          array[i][j].state = 0
+        if(array[i][j].state === 0) {
+        cell.push(array[i][j].dead())
         }
       }
+      gridDiv.push(cell)
     }
-    console.log(array)
-   console.log("playlifeRan")
-  }
+    this.setState({
+      gridRun: gridDiv,
+    })
+}
 
-  let grid = (array) => {
-    while(this.state.running === !false) {
-      let gridDiv = []
-      for(let i = 0; i < array.length; i++) {
-        let cell = []
-        for(let j = 0; j < array[i].length; j++){
-          if(array[i][j].state === 1) {
-          cell.push(array[i][j].alive())
-          }
-          if(array[i][j].state === 0) {
-          cell.push(array[i][j].dead())
-          }else { j++}
-        }
-        gridDiv.push(cell)
-      }
-      console.log(gridDiv)
-      return gridDiv
-    }
-  }
-
-
-    pupulateArray(10,10)
-    randomStart()
+  render() {
 
   return (
     <div className="App">
-      <button onClick={this.handleClick}>Click me</button>
-      <button onClick={playLife}> start </button>
-      {grid(array)}
+      <div className="buttonsContainer">
+        <button onClick={this.handleClick}>Set up grid</button>
+        <button className={"randomStart"} onClick={this.randomStart} > Random Start </button>
+        <button onClick={this.playLife}> Step </button>
+      </div>
+      <div className="gridContainer">
+        {this.state.gridRun}
+      </div>
     </div>
   );
   }
