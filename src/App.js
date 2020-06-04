@@ -18,10 +18,10 @@ export default class App extends React.Component {
   pupulateArray = (numCol, numRow) => {
     let array = []
     let styleAlive = {
-      backgroundColor: "blue"
+      backgroundColor: "white"
     }
     let styleDead = {
-      backgroundColor: "white"
+      backgroundColor: "black"
     }
     for(let i = 0; i < numCol; i++) {
       let fill =[]
@@ -51,7 +51,7 @@ export default class App extends React.Component {
     this.setState({
       running: !this.state.running,
     })
-    this.pupulateArray(50, 50)
+    this.pupulateArray(50, 100)
   }
 
 
@@ -59,10 +59,10 @@ export default class App extends React.Component {
     let { gridStart } = this.state
     let gridInitialState = []
     let styleAlive = {
-      backgroundColor: "blue"
+      backgroundColor: "white"
     }
     let styleDead = {
-      backgroundColor: "white"
+      backgroundColor: "black"
     }
 
     for(let i = 0; i < gridStart.length; i++) {
@@ -110,7 +110,7 @@ export default class App extends React.Component {
     })
 
   }
-//16377
+
   playLife = () => {
   
   let cell = this.state.gridInitialState
@@ -137,10 +137,10 @@ export default class App extends React.Component {
     return sum
   }
   let styleAlive = {
-    backgroundColor: "blue"
+    backgroundColor: "white"
   }
   let styleDead = {
-    backgroundColor: "white"
+    backgroundColor: "black"
   }
   for(let i = 0; i < cell.length; i++) {
     let preGrid = []
@@ -255,13 +255,24 @@ grid = (array) => {
     })
 }
 
-  render() {
 
+start = () => {
+  this.continuousPlay = setInterval(this.playLife, 1000)
+}
+stop = () => { 
+  clearInterval(this.continuousPlay)
+}
+
+  render() {
+ 
   return (
     <div className="App">
+      <h1>John Conway's Game of Life</h1>
       <div className="buttonsContainer">
         <button onClick={this.handleClick}>Set up grid</button>
         <button className={"randomStart"} onClick={this.randomStart} > Random Start </button>
+        <button onClick={this.start}> Start </button>
+        <button onClick={this.stop}> Stop </button>
         <button onClick={this.playLife}> Step </button>
       </div>
       <div className="gridContainer">
