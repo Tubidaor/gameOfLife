@@ -11,6 +11,8 @@ export default class App extends React.Component {
       gridInitialState: [],
       gridRun: [],
       running: false,
+      screenHeight: null,
+      screenWidth: null,
     }
   }
   
@@ -263,19 +265,45 @@ stop = () => {
   clearInterval(this.continuousPlay)
 }
 
+componentDidMount() {
+  let height = window.innerHeight
+  let width = window.innerWidth
+  let rows = () => {
+    if(width/height > 1.5) {
+      return Math.floor((window.innerHeight-150)/10)
+    }
+    return Math.floor((width-20)/10)
+  }
+  let cols = () => {
+    if(width/height > 1.5) {
+      return Math.floor((width-100)/10)
+    }
+    return rows ()
+  }
+  this.setState({
+    screenHeight: rows() * 10,
+    screenWidth: cols() * 10,
+  })
+  this.pupulateArray(rows(), cols())
+  console.log(rows(), cols())
+}
   render() {
+  let style = {
+    width: this.state.screenWidth,
+    height: this.state.screenHeight,
+  }
  
   return (
     <div className="App">
       <h1>John Conway's Game of Life</h1>
       <div className="buttonsContainer">
-        <button onClick={this.handleClick}>Set up grid</button>
+        {/* <button onClick={this.handleClick}>Set up grid</button> */}
         <button className={"randomStart"} onClick={this.randomStart} > Random Start </button>
         <button onClick={this.start}> Start </button>
         <button onClick={this.stop}> Stop </button>
         <button onClick={this.playLife}> Step </button>
       </div>
-      <div className="gridContainer">
+      <div className="gridContainer" style={style}>
         {this.state.gridRun}
       </div>
     </div>
