@@ -30,7 +30,6 @@ h1 {
   margin-left: auto;
   text-align: center;
 }
-
 button {
   border-radius: 4px;
   background-color: black;
@@ -48,7 +47,6 @@ button:hover {
 }
 button:active {
   background-color: gray;
-  /* box-shadow: 0 5px #666; */
   transform: translateY(4px);
 }
 .gridContainer {
@@ -56,8 +54,6 @@ button:active {
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  /* height: auto;
-  width: auto; */
   margin-left: auto;
   margin-right: auto;
   margin-top: 40px;
@@ -65,11 +61,10 @@ button:active {
 
 
 @media screen and (min-width: 500px) {
-.buttonsContainer {
-  margin-right: auto;
-  margin-left: auto;
-  width: 500px;
-  text-align: center;
-}
-
+  .buttonsContainer {
+    margin-right: auto;
+    margin-left: auto;
+    width: 500px;
+    text-align: center;
+  }
 }

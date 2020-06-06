@@ -10,7 +10,6 @@ export default class App extends React.Component {
       gridStart: [],
       gridInitialState: [],
       gridRun: [],
-      running: false,
       screenHeight: null,
       screenWidth: null,
     }
@@ -47,15 +46,6 @@ export default class App extends React.Component {
       })
   }
   }
-
-  handleClick = () => {
-    
-    this.setState({
-      running: !this.state.running,
-    })
-    this.pupulateArray(50, 100)
-  }
-
 
   randomStart = () => {
     let { gridStart } = this.state
@@ -233,9 +223,8 @@ export default class App extends React.Component {
   this.setState({
     gridInitialState: emptyGrid
   })
-}
-
-this.grid(emptyGrid)
+  }
+  this.grid(emptyGrid)
 }
 
 grid = (array) => {
@@ -256,7 +245,6 @@ grid = (array) => {
       gridRun: gridDiv,
     })
 }
-
 
 start = () => {
   this.continuousPlay = setInterval(this.playLife, 1000)
@@ -292,13 +280,12 @@ componentDidMount() {
     width: this.state.screenWidth,
     height: this.state.screenHeight,
   }
- 
+
   return (
     <div className="App">
       <h1>John Conway's Game of Life</h1>
       <div className="buttonsContainer">
-        {/* <button onClick={this.handleClick}>Set up grid</button> */}
-        <button className={"randomStart"} onClick={this.randomStart} > Random Start </button>
+        <button className={"randomStart"} onClick={this.randomStart} > Random State </button>
         <button onClick={this.start}> Start </button>
         <button onClick={this.stop}> Stop </button>
         <button onClick={this.playLife}> Step </button>
